@@ -5,6 +5,17 @@
      <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <style>
+       div h1{
+        font-family: Helvetica;
+        font-size: 100px;
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+       }
+       h2{
+        font-size: 12px;
+        text-align: center;
+       }
        html, body, #map-canvas {
          height: 100%;
         margin: 0px;
@@ -17,7 +28,7 @@
     $(document).ready(function(){
 
        var statement = confirm("Are you having trouble finding a place to travel to?");
-        var questionAnswer = prompt("What is a intrest or hobby of yours?");
+        var questionAnswer = prompt("What is an intrest or hobby of yours?");
 
       $.getJSON('http://cooper-union-search-proxy.herokuapp.com/twitter/search/%23' + questionAnswer + "?count=100", function(twitter){
          console.log(twitter);
@@ -35,7 +46,8 @@
               ) {
 
                tweetCords[i] = twitter.statuses[i].coordinates.coordinates
-                console.log(twitter.statuses[i].user.location)
+               tweetLoc= twitter.statuses[i].user.location
+               console.log(tweetLoc)
                 // console.log(twitter.statuses[i].coordinates.coordinates)
 
             }
@@ -72,9 +84,14 @@
               var markerOptions = {
                   position: position,
                   map: map,
-                  title:"Travel Here!",
-                  // icon: 'http://www.planet-action.org/img/2009/interieur/icons/orange-dot.png' //url to images
+                  animation: google.maps.Animation.BOUNCE,
+                  title:"Drag me!"
+                  
               };
+               google.maps.event.addListener(markerOptions, 'click', function() {
+                        window.location.href = 'http://wikitravel.org/en/' + tweetLoc ;
+                        // TWEETLOC DOES NOT FIND THE CORRECT LOCATION VALUE TO THE LAT AND LON CORDS(it is a random location)!!!!!!!
+                    });
               // To add the marker to the map, use the 'map' property
               markers[i] = new google.maps.Marker(markerOptions);
             }
@@ -92,6 +109,10 @@
     </script>
   </head>
   <body>
+    <div> 
+      <h1> Choose a place! </h1>
+     </div>
+     <h2> This page takes your interest and searches tweets from around the world with that hashtagged interest, making it easier to find what places around the world share the same interests as you. </h2>
 <!--  <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>  -->
  <div id="map-canvas"></div>
   </body>
